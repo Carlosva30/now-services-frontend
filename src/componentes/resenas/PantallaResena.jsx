@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from '../../api/axios';
 
-const PantallaReseña = ({ solicitud, onFinalizar }) => {
+const PantallaResena = ({ solicitud, onFinalizar }) => {
   const [comentario, setComentario] = useState('');
   const [calificacion, setCalificacion] = useState(5);
   const [mensaje, setMensaje] = useState('');
   const [cargando, setCargando] = useState(false);
 
-  const enviarReseña = async () => {
+  const enviarResena = async () => {
     if (!comentario || calificacion < 1 || calificacion > 5) {
       setMensaje('❗️Por favor escribe un comentario y elige una calificación entre 1 y 5.');
       return;
@@ -15,10 +15,9 @@ const PantallaReseña = ({ solicitud, onFinalizar }) => {
 
     setCargando(true);
     setMensaje('');
-
     try {
-      await axios.post('/reseñas', {
-        clienteId: solicitud.usuario?._id || solicitud.usuarioId, // ✅ corrección aquí
+      await axios.post('/resenas', {
+        clienteId: solicitud.usuario._id,
         expertoId: solicitud.expertoId,
         comentario,
         calificacion,
@@ -73,7 +72,7 @@ const PantallaReseña = ({ solicitud, onFinalizar }) => {
         </button>
 
         <button
-          onClick={enviarReseña}
+          onClick={enviarResena}
           disabled={cargando}
           style={{
             backgroundColor: '#1e318a',
@@ -94,4 +93,4 @@ const PantallaReseña = ({ solicitud, onFinalizar }) => {
   );
 };
 
-export default PantallaReseña;
+export default PantallaResena;

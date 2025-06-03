@@ -6,13 +6,13 @@ import PantallaPerfilExperto from './componentes/experto/PantallaPerfilExperto';
 import PantallaSolicitudesExperto from './componentes/experto/PantallaSolicitudesExperto';
 import PantallaHistorialCliente from './componentes/inicio/PantallaHistorialCliente';
 import PantallaPagoServicio from './componentes/pagos/PantallaPagoServicio';
-import PantallaReseña from './componentes/reseñas/PantallaReseña';
+import PantallaResena from './componentes/resenas/PantallaResena';
 
 function App() {
   const [pantalla, setPantalla] = useState('login');
   const [usuario, setUsuario] = useState(null);
   const [solicitudParaPagar, setSolicitudParaPagar] = useState(null);
-  const [solicitudParaReseña, setSolicitudParaReseña] = useState(null);
+  const [solicitudParaResena, setSolicitudParaReseña] = useState(null);
 
   return (
     <div>
@@ -90,11 +90,11 @@ function App() {
         />
       )}
 
-      {pantalla === 'reseña' && solicitudParaReseña && (
-        <PantallaReseña
-          solicitud={solicitudParaReseña}
+      {pantalla === 'resena' && solicitudParaResena && (
+        <PantallaResena
+          solicitud={solicitudParaResena}
           onFinalizar={() => {
-            setSolicitudParaReseña(null);
+            setSolicitudParaResena(null);
             setPantalla('historial');
           }}
         />
