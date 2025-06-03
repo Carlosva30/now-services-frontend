@@ -12,7 +12,7 @@ function App() {
   const [pantalla, setPantalla] = useState('login');
   const [usuario, setUsuario] = useState(null);
   const [solicitudParaPagar, setSolicitudParaPagar] = useState(null);
-  const [solicitudParaResena, setSolicitudParaReseña] = useState(null);
+  const [solicitudParaResena, setSolicitudParaResena] = useState(null);
 
   return (
     <div>
@@ -71,7 +71,7 @@ function App() {
           onVolver={() => setPantalla('inicio')}
           setSolicitudParaPagar={setSolicitudParaPagar}
           setPantalla={setPantalla}
-          setSolicitudParaReseña={setSolicitudParaReseña}
+          setSolicitudParaResena={setSolicitudParaResena}
         />
       )}
 
@@ -79,9 +79,9 @@ function App() {
         <PantallaPagoServicio
           solicitud={solicitudParaPagar}
           onPagoCompleto={() => {
-            setSolicitudParaReseña(solicitudParaPagar); // ✅ solución clave
+            setSolicitudParaResena(solicitudParaPagar);
             setSolicitudParaPagar(null);
-            setPantalla('reseña');
+            setPantalla('resena');
           }}
           onCancelar={() => {
             setSolicitudParaPagar(null);
