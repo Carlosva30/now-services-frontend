@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// usa la variable de entorno en producción
 const instancia = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json'
   }
