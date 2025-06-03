@@ -1,120 +1,149 @@
 import React, { useState } from 'react';
 import axios from '../../api/axios';
 
-const serviciosDisponibles = [
-  'Electricista',
-  'Plomero',
-  'Pintor',
-  'Mecánico',
-  'Carpintero',
-  'Técnico en electrodomésticos',
-  'Jardinero',
-  'Cerrajero',
-  'Otros'
-];
-
-const PantallaRegistro = ({ onRegistro }) => {
-  const [nombre, setNombre] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [tipoUsuario, setTipoUsuario] = useState('');
-  const [serviciosOfrecidos, setServiciosOfrecidos] = useState([]);
+const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
+  const [formulario, setFormulario] = useState({
+    nombre: '',
+    correo: '',
+    contraseña: '',
+    tipoUsuario: 'cliente',
+  });
   const [mensaje, setMensaje] = useState('');
-  const [exito, setExito] = useState(false);
+  const [cargando, setCargando] = useState(false);
 
-  const handleServicioChange = (servicio) => {
-    setServiciosOfrecidos(prev =>
-      prev.includes(servicio)
-        ? prev.filter(s => s !== servicio)
-        : [...prev, servicio]
-    );
+  const handleChange = (e) => {
+    setFormulario({ ...formulario, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!tipoUsuario) {
-      setMensaje('Por favor selecciona si eres Cliente o Experto.');
-      setExito(false);
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje('');
+    setCargando(true);
 
     try {
-      await axios.post('/auth/registro', {
-        nombre,
-        correo,
-        contraseña,
-        tipoUsuario,
-        serviciosOfrecidos: tipoUsuario === 'experto' ? serviciosOfrecidos : []
-      });
-
-      setExito(true);
-      setMensaje('¡Usuario registrado exitosamente! ✅');
-
-      setTimeout(() => {
-        if (onRegistro) onRegistro(tipoUsuario);
-      }, 2000);
-    } catch (error) {
-      setExito(false);
-      setMensaje(error.response?.data?.mensaje || 'Error al registrarse');
-      console.error('❌ Error en el registro:', error);
+      const res = await axios.post('/auth/registro', formulario);
+      setMensaje('✅ Registro exitoso, inicia sesión.');
+      setTimeout(() => onRegistroExitoso(), 1000);
+    } catch (err) {
+      console.error('❌ Error en el registro:', err);
+      setMensaje('❌ Ocurrió un error al registrarse.');
+    } finally {
+      setCargando(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#1e318a' }}>
-      <form onSubmit={handleSubmit} style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '12px', width: '340px', boxShadow: '0 0 10px rgba(0,0,0,0.2)' }}>
-        <h2 style={{ marginBottom: '20px', textAlign: 'center', color: '#1e318a' }}>Registro</h2>
+    <div style={styles.contenedor}>
+      <h2 style={styles.titulo}>📝 Crear una cuenta</h2>
 
-        <input type="text" placeholder="Tu nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required style={inputStyle} />
-        <input type="email" placeholder="Correo electrónico" value={correo} onChange={(e) => setCorreo(e.target.value)} required style={inputStyle} />
-        <input type="password" placeholder="Contraseña" value={contraseña} onChange={(e) => setContraseña(e.target.value)} required style={inputStyle} />
+      <form onSubmit={handleSubmit} style={styles.formulario}>
+        <label>Nombre completo</label>
+        <input
+          type="text"
+          name="nombre"
+          value={formulario.nombre}
+          onChange={handleChange}
+          required
+          placeholder="Ej. Juan Pérez"
+        />
 
-        <select value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)} required style={inputStyle}>
-          <option value="">Selecciona tu tipo de usuario</option>
+        <label>Correo electrónico</label>
+        <input
+          type="email"
+          name="correo"
+          value={formulario.correo}
+          onChange={handleChange}
+          required
+          placeholder="correo@ejemplo.com"
+        />
+
+        <label>Contraseña</label>
+        <input
+          type="password"
+          name="contraseña"
+          value={formulario.contraseña}
+          onChange={handleChange}
+          required
+          placeholder="Mínimo 6 caracteres"
+        />
+
+        <label>Tipo de Usuario</label>
+        <select
+          name="tipoUsuario"
+          value={formulario.tipoUsuario}
+          onChange={handleChange}
+          style={styles.select}
+        >
           <option value="cliente">Cliente</option>
           <option value="experto">Experto</option>
         </select>
 
-        {tipoUsuario === 'experto' && (
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ fontWeight: 'bold' }}>Servicios ofrecidos:</label>
-            <div style={{ maxHeight: '150px', overflowY: 'auto', padding: '5px', border: '1px solid #ccc', borderRadius: '5px' }}>
-              {serviciosDisponibles.map(servicio => (
-                <div key={servicio}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={serviciosOfrecidos.includes(servicio)}
-                      onChange={() => handleServicioChange(servicio)}
-                      style={{ marginRight: '5px' }}
-                    />
-                    {servicio}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <button type="submit" style={{ ...inputStyle, backgroundColor: '#1e318a', color: '#fff', fontWeight: 'bold' }}>
-          Registrarse
+        <button type="submit" disabled={cargando} style={styles.boton}>
+          {cargando ? 'Registrando...' : '✅ Registrarse'}
         </button>
-
-        {mensaje && (
-          <p style={{ color: exito ? 'green' : 'red', marginTop: '15px', textAlign: 'center' }}>{mensaje}</p>
-        )}
       </form>
+
+      {mensaje && <p style={styles.mensaje}>{mensaje}</p>}
+
+      <p style={styles.link}>
+        ¿Ya tienes cuenta?{' '}
+        <span onClick={cambiarPantalla} style={styles.linkTexto}>
+          Inicia sesión
+        </span>
+      </p>
     </div>
   );
 };
 
-const inputStyle = {
-  marginBottom: '10px',
-  width: '100%',
-  padding: '10px',
-  border: '1px solid #ccc',
-  borderRadius: '5px'
+const styles = {
+  contenedor: {
+    maxWidth: '400px',
+    margin: '60px auto',
+    padding: '30px',
+    backgroundColor: '#f4f7fa',
+    borderRadius: '12px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+  },
+  titulo: {
+    textAlign: 'center',
+    color: '#1e318a',
+    marginBottom: '25px',
+  },
+  formulario: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  select: {
+    padding: '10px',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+  },
+  boton: {
+    backgroundColor: '#1e318a',
+    color: 'white',
+    padding: '12px',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    marginTop: '15px',
+  },
+  mensaje: {
+    textAlign: 'center',
+    marginTop: '15px',
+    color: '#444',
+  },
+  link: {
+    marginTop: '20px',
+    textAlign: 'center',
+    color: '#666',
+  },
+  linkTexto: {
+    color: '#1e318a',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+  },
 };
 
 export default PantallaRegistro;

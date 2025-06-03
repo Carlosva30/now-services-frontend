@@ -34,51 +34,102 @@ function Login({ onLoginExitoso, onRegistro }) {
   };
 
   return (
-    <div className="login" style={{ padding: 20, maxWidth: 400, margin: 'auto', textAlign: 'center' }}>
-      <h2>Iniciar Sesión</h2>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(to right, #1e3c72, #2a5298)',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      <div style={{
+        backgroundColor: '#fff',
+        padding: '40px',
+        borderRadius: '12px',
+        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+        width: '100%',
+        maxWidth: '400px'
+      }}>
+        <h2 style={{ marginBottom: '20px', color: '#1e3c72', textAlign: 'center' }}>Iniciar Sesión</h2>
 
-      <input
-        type="email"
-        placeholder="Correo"
-        value={correo}
-        onChange={(e) => setCorreo(e.target.value)}
-        style={{ padding: '10px', marginBottom: '10px', width: '100%', borderRadius: '5px', border: '1px solid #ccc' }}
-      />
+        <input
+          type="email"
+          placeholder="Correo"
+          value={correo}
+          onChange={(e) => setCorreo(e.target.value)}
+          style={{
+            padding: '12px',
+            marginBottom: '15px',
+            width: '100%',
+            borderRadius: '6px',
+            border: '1px solid #ccc'
+          }}
+        />
 
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={contraseña}
-        onChange={(e) => setContraseña(e.target.value)}
-        style={{ padding: '10px', marginBottom: '10px', width: '100%', borderRadius: '5px', border: '1px solid #ccc' }}
-      />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={contraseña}
+          onChange={(e) => setContraseña(e.target.value)}
+          style={{
+            padding: '12px',
+            marginBottom: '15px',
+            width: '100%',
+            borderRadius: '6px',
+            border: '1px solid #ccc'
+          }}
+        />
 
-      {/* para implementar despues */}
-      <button
-        onClick={() => alert('Funcionalidad por implementar')}
-        style={{ background: 'none', color: '#007bff', border: 'none', cursor: 'pointer', marginBottom: '10px' }}
-      >
-        ¿Olvidaste tu contraseña?
-      </button>
+        <button
+          onClick={() => alert('Funcionalidad por implementar')}
+          style={{
+            background: 'none',
+            color: '#007bff',
+            border: 'none',
+            cursor: 'pointer',
+            marginBottom: '15px',
+            fontSize: '14px',
+            textDecoration: 'underline'
+          }}
+        >
+          ¿Olvidaste tu contraseña?
+        </button>
 
-      <br />
+        <button
+          onClick={manejarLogin}
+          style={{
+            padding: '12px',
+            width: '100%',
+            backgroundColor: '#1e3c72',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            cursor: 'pointer'
+          }}
+        >
+          Ingresar
+        </button>
 
-      <button
-        onClick={manejarLogin}
-        style={{ padding: '10px 20px', marginBottom: '10px', width: '100%', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}
-      >
-        Ingresar
-      </button>
+        <button
+          onClick={onRegistro}
+          style={{
+            padding: '12px',
+            width: '100%',
+            backgroundColor: '#28a745',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: 'bold',
+            cursor: 'pointer'
+          }}
+        >
+          Registrarse
+        </button>
 
-      {/*BOTÓN DE REGISTRO LLAMANDO A onRegistro */}
-      <button
-        onClick={() => onRegistro()}
-        style={{ padding: '10px 20px', width: '100%', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}
-      >
-        Registrarse
-      </button>
-
-      {error && <p style={{ color: 'red', marginTop: '15px' }}>{error}</p>}
+        {error && <p style={{ color: 'red', marginTop: '20px', textAlign: 'center' }}>{error}</p>}
+      </div>
     </div>
   );
 }
