@@ -25,13 +25,18 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
     correo: '',
     contraseña: '',
     tipoUsuario: 'cliente',
-    servicio: '',
+    servicios: [],
   });
   const [mensaje, setMensaje] = useState('');
   const [cargando, setCargando] = useState(false);
 
   const handleChange = (e) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
+  };
+
+  const handleServiciosChange = (e) => {
+    const seleccionados = Array.from(e.target.selectedOptions, (option) => option.value);
+    setFormulario({ ...formulario, servicios: seleccionados });
   };
 
   const handleSubmit = async (e) => {
@@ -99,15 +104,14 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
 
         {formulario.tipoUsuario === 'experto' && (
           <>
-            <label>Servicio que ofrece</label>
+            <label>Servicios ofrecidos (puedes elegir varios)</label>
             <select
-              name="servicio"
-              value={formulario.servicio}
-              onChange={handleChange}
-              style={styles.select}
-              required
+              multiple
+              name="servicios"
+              value={formulario.servicios}
+              onChange={handleServiciosChange}
+              style={{ ...styles.select, height: '120px' }}
             >
-              <option value="">-- Selecciona un servicio --</option>
               {serviciosDisponibles.map((serv) => (
                 <option key={serv} value={serv}>
                   {serv}
