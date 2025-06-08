@@ -35,7 +35,7 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
   };
 
   const handleServiciosChange = (e) => {
-    const seleccionados = Array.from(e.target.selectedOptions, (option) => option.value);
+    const seleccionados = Array.from(e.target.selectedOptions, option => option.value);
     setFormulario({ ...formulario, servicios: seleccionados });
   };
 
@@ -104,13 +104,12 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
 
         {formulario.tipoUsuario === 'experto' && (
           <>
-            <label>Servicios ofrecidos (puedes elegir varios)</label>
+            <label>Servicios que ofrece (usa Ctrl/Cmd para seleccionar varios)</label>
             <select
               multiple
-              name="servicios"
               value={formulario.servicios}
               onChange={handleServiciosChange}
-              style={{ ...styles.select, height: '120px' }}
+              style={{ ...styles.select, height: '150px' }}
             >
               {serviciosDisponibles.map((serv) => (
                 <option key={serv} value={serv}>
