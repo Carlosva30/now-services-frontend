@@ -34,9 +34,12 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
   };
 
-  const handleServiciosChange = (e) => {
-    const seleccionados = Array.from(e.target.selectedOptions, option => option.value);
-    setFormulario({ ...formulario, servicios: seleccionados });
+  const handleCheckboxChange = (servicio) => {
+    const yaSeleccionado = formulario.servicios.includes(servicio);
+    const nuevosServicios = yaSeleccionado
+      ? formulario.servicios.filter((s) => s !== servicio)
+      : [...formulario.servicios, servicio];
+    setFormulario({ ...formulario, servicios: nuevosServicios });
   };
 
   const handleSubmit = async (e) => {
@@ -45,7 +48,7 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
     setCargando(true);
 
     try {
-      const res = await axios.post('/auth/registro', formulario);
+      await axios.post('/auth/registro', formulario);
       setMensaje('✅ Registro exitoso, inicia sesión.');
       setTimeout(() => onRegistroExitoso(), 1000);
     } catch (err) {
@@ -103,21 +106,22 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
         </select>
 
         {formulario.tipoUsuario === 'experto' && (
-          <>
-            <label>Servicios que ofrece (usa Ctrl/Cmd para seleccionar varios)</label>
-            <select
-              multiple
-              value={formulario.servicios}
-              onChange={handleServiciosChange}
-              style={{ ...styles.select, height: '150px' }}
-            >
+          <div>
+            <label>Servicios que ofrece</label>
+            <div style={styles.checkboxGroup}>
               {serviciosDisponibles.map((serv) => (
-                <option key={serv} value={serv}>
+                <label key={serv} style={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    value={serv}
+                    checked={formulario.servicios.includes(serv)}
+                    onChange={() => handleCheckboxChange(serv)}
+                  />
                   {serv}
-                </option>
+                </label>
               ))}
-            </select>
-          </>
+            </div>
+          </div>
         )}
 
         <button type="submit" disabled={cargando} style={styles.boton}>
@@ -139,7 +143,7 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
 
 const styles = {
   contenedor: {
-    maxWidth: '400px',
+    maxWidth: '450px',
     margin: '60px auto',
     padding: '30px',
     backgroundColor: '#f4f7fa',
@@ -160,6 +164,23 @@ const styles = {
     padding: '10px',
     borderRadius: '6px',
     border: '1px solid #ccc',
+  },
+  checkboxGroup: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '10px',
+    marginTop: '10px',
+  },
+  checkboxLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    fontSize: '14px',
+    background: '#fff',
+    border: '1px solid #ddd',
+    padding: '6px 10px',
+    borderRadius: '8px',
+    cursor: 'pointer',
   },
   boton: {
     backgroundColor: '#1e318a',
