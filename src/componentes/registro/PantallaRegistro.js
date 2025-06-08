@@ -1,12 +1,31 @@
 import React, { useState } from 'react';
 import axios from '../../api/axios';
 
+const serviciosDisponibles = [
+  'Fontanero',
+  'Electricista',
+  'Aseo Doméstico',
+  'Carpintero',
+  'Pintor',
+  'Tapicero',
+  'Jardinero',
+  'Lavado de Alfombras',
+  'Lavado de Muebles',
+  'Cerrajero',
+  'Técnico de electrodomésticos',
+  'Instalador de gas',
+  'Montaje de muebles',
+  'Instalación de cámaras o alarmas',
+  'Sistemas contra incendios',
+];
+
 const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
   const [formulario, setFormulario] = useState({
     nombre: '',
     correo: '',
     contraseña: '',
     tipoUsuario: 'cliente',
+    servicio: '',
   });
   const [mensaje, setMensaje] = useState('');
   const [cargando, setCargando] = useState(false);
@@ -77,6 +96,26 @@ const PantallaRegistro = ({ onRegistroExitoso, cambiarPantalla }) => {
           <option value="cliente">Cliente</option>
           <option value="experto">Experto</option>
         </select>
+
+        {formulario.tipoUsuario === 'experto' && (
+          <>
+            <label>Servicio que ofrece</label>
+            <select
+              name="servicio"
+              value={formulario.servicio}
+              onChange={handleChange}
+              style={styles.select}
+              required
+            >
+              <option value="">-- Selecciona un servicio --</option>
+              {serviciosDisponibles.map((serv) => (
+                <option key={serv} value={serv}>
+                  {serv}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
         <button type="submit" disabled={cargando} style={styles.boton}>
           {cargando ? 'Registrando...' : '✅ Registrarse'}
