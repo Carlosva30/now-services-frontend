@@ -32,14 +32,7 @@ function App() {
 
       {pantalla === 'registro' && (
         <PantallaRegistro
-          onRegistro={(tipo, datosUsuario) => {
-            setUsuario(datosUsuario);
-            if (tipo === 'cliente') {
-              setPantalla('inicio');
-            } else {
-              setPantalla('perfilExperto');
-            }
-          }}
+          onVolverLogin={() => setPantalla('login')}
         />
       )}
 

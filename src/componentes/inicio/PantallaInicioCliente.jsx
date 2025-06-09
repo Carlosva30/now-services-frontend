@@ -133,6 +133,29 @@ const PantallaInicioCliente = ({ onCambiarPantalla, clienteEmail, clienteId }) =
             😔 No se encontraron expertos con ese servicio.
           </p>
         )}
+
+        {/* Botón de cerrar sesión */}
+        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+          <button
+            onClick={() => {
+              localStorage.clear();
+              onCambiarPantalla('login');
+            }}
+            style={{
+              backgroundColor: '#d9534f',
+              color: 'white',
+              border: 'none',
+              padding: '12px 25px',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              boxShadow: '0 4px 10px rgba(0,0,0,0.08)'
+            }}
+          >
+             Cerrar sesión
+          </button>
+        </div>
       </div>
     </div>
   );

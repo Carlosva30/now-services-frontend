@@ -13,7 +13,7 @@ const serviciosDisponibles = [
   'Otros'
 ];
 
-const PantallaRegistro = ({ onRegistro }) => {
+const PantallaRegistro = ({ onRegistro, onVolverLogin }) => {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -51,9 +51,10 @@ const PantallaRegistro = ({ onRegistro }) => {
       setExito(true);
       setMensaje('¡Usuario registrado exitosamente! ✅');
 
+      // Redirigir al login después de 1.5 segundos
       setTimeout(() => {
-        if (onRegistro) onRegistro(tipoUsuario);
-      }, 2000);
+        if (onVolverLogin) onVolverLogin();
+      }, 1500);
     } catch (error) {
       setExito(false);
       setMensaje(error.response?.data?.mensaje || 'Error al registrarse');
@@ -104,6 +105,25 @@ const PantallaRegistro = ({ onRegistro }) => {
         {mensaje && (
           <p style={{ color: exito ? 'green' : 'red', marginTop: '15px', textAlign: 'center' }}>{mensaje}</p>
         )}
+
+        {/* Botón para volver al login */}
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button
+            type="button"
+            onClick={onVolverLogin}
+            style={{
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+             Iniciar sesión
+          </button>
+        </div>
       </form>
     </div>
   );
